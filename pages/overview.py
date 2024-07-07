@@ -78,7 +78,7 @@ def create_layout():
                             dbc.CardBody(
                                 [
                                     html.H5("Total Sales", className="card-title text-center", style={"fontSize": "20px"}),
-                                    html.P(id="total-sales-card", className="card-text text-center", style={"fontSize": "24px"}),
+                                    html.P(id="total-sales-card", className="card-text text-center", style={"fontSize": "6rem", "color": "#D22630"}),
                                 ]
                             ),
                         ),
@@ -89,8 +89,9 @@ def create_layout():
                             dbc.CardBody(
                                 [
                                     html.H5("Total Customers", className="card-title text-center", style={"fontSize": "20px"}),
-                                    html.P(id="total-customers-card", className="card-text text-center", style={"fontSize": "24px"}),
-                                ]
+                                    html.P(id="total-customers-card", className="card-text text-center", style={"fontSize": "6rem", "color": "#D22630"}),
+                                ],
+
                             ),
                         ),
                         width=3,
@@ -100,7 +101,7 @@ def create_layout():
                             dbc.CardBody(
                                 [
                                     html.H5("Total Products Sold", className="card-title text-center", style={"fontSize": "20px"}),
-                                    html.P(id="total-products-sold-card", className="card-text text-center", style={"fontSize": "24px"}),
+                                    html.P(id="total-products-sold-card", className="card-text text-center", style={"fontSize": "6rem", "color": "#D22630"}),
                                 ]
                             ),
                         ),
@@ -111,7 +112,7 @@ def create_layout():
                             dbc.CardBody(
                                 [
                                     html.H5("Average Order Value", className="card-title text-center", style={"fontSize": "20px"}),
-                                    html.P(id="average-order-value-card", className="card-text text-center", style={"fontSize": "24px"}),
+                                    html.P(id="average-order-value-card", className="card-text text-center", style={"fontSize": "6rem", "color": "#D22630"}),
                                 ]
                             ),
                         ),

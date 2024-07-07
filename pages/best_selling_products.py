@@ -67,8 +67,8 @@ def create_product_layout():
             ),
             dbc.Row(
                 [
-                    dbc.Col(dcc.Graph(id='plv-bubble-chart', style={"height": "80vh"}), width=6),
-                    dbc.Col(dcc.Graph(id='highest-discounts-graph', style={"height": "55vh"}), width=6),
+                    dbc.Col(dcc.Graph(id='plv-bubble-chart', style={"height": "50vh"}), width=6),
+                    dbc.Col(dcc.Graph(id='highest-discounts-graph', style={"height": "50vh"}), width=6),
                 ]
             ),
         ],
@@ -128,10 +128,10 @@ def update_top_products(num_products):
         size='PLV',
         color='PLV',
         hover_data=['ProductID'],
-        title='Product Lifetime Value (PLV)',
+        title='Product Lifetime Value (PLV) = (Ave Order Value * Purchase Frequency * Average Lifespan)',
         template='plotly_white',
         color_continuous_scale='Viridis',
-        height=800  # Increase the height of the plot
+        height=700  # Adjust the height of the plot
     )
 
     # Add threshold line
@@ -148,18 +148,22 @@ def update_top_products(num_products):
 
     # Products with Highest Discounts
     discount_summary = sales_df.groupby('ProductID').agg(
-        AverageDiscount=pd.NamedAgg(column='Discount', aggfunc='mean')
+        AverageDiscount=pd.NamedAgg(column='Discount', aggfunc='mean'),
+        TotalAmount=pd.NamedAgg(column='TotalAmount', aggfunc='sum')
     ).reset_index()
 
     top_discounts = discount_summary.nlargest(num_products, 'AverageDiscount')
 
-    fig_highest_discounts = px.bar(
+    fig_highest_discounts = px.scatter(
         top_discounts,
         x='ProductID',
         y='AverageDiscount',
+        size='AverageDiscount',
+        color='TotalAmount',
+        hover_data=['ProductID'],
         title='Products with Highest Discounts',
         template='plotly_white',
-        color_discrete_sequence=['#ff6347']
+        color_continuous_scale='Viridis'
     )
 
     return fig_top_products, fig_sales_percentage, fig_plv_bubble, fig_highest_discounts

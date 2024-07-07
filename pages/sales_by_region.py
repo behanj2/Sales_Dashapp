@@ -150,7 +150,7 @@ def create_layout():
     layout = dbc.Container(
         [
             dbc.Row(
-                dbc.Col(html.H2("Sales by Region", className='text-center', style={"paddingTop": "30px"}), width=12)
+                dbc.Col(html.H2("", className='text-center', style={"paddingTop": "30px"}), width=12)
             ),
             dbc.Row(
                 [
@@ -310,7 +310,7 @@ def update_graphs(start_date, end_date):
     )
 
     fig_diamond.update_layout(
-        title='Sales by Region',
+        title='Temporal Map of Sales by Region',
         showlegend=False,
         xaxis=dict(showgrid=False, zeroline=False, showticklabels=False, range=[-0.1, 1.1]),
         yaxis=dict(showgrid=False, zeroline=False, showticklabels=False, range=[-0.1, 1.1]),

@@ -66,7 +66,7 @@ def create_layout():
                 ]
             ),
             dbc.Row(
-                dbc.Col(dcc.Graph(id='clv-bubble-chart', style={"height": "80vh"}), width=12)
+                dbc.Col(dcc.Graph(id='clv-bubble-chart', style={"height": "50vh"}), width=12)
             ),
         ],
         fluid=True,
@@ -124,10 +124,10 @@ def update_top_customers(num_customers):
         size='CLV',
         color='CLV',
         hover_data=['CustomerID'],
-        title='Customer Lifetime Value (CLV)',
+        title='Customer Lifetime Value (CLV) = (Ave Order Value * Purchase Frequency * Average Lifespan)',
         template='plotly_white',
         color_continuous_scale='Viridis',
-        height=800  # Increase the height of the plot
+        height=700  # Increase the height of the plot
     )
 
     # Add threshold line

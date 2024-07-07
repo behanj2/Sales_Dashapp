@@ -27,9 +27,9 @@ def create_customerdetails_table(filename, db):
         db.execute(f'CREATE TABLE "{table_name}" ("CustomerID" INTEGER PRIMARY KEY)')
         
         # Insert data
-        customers = {row['CustomerID'] for row in reader}  # Use a set to ensure uniqueness
+        customers = {row['CustomerID'] for row in reader if row['CustomerID'].isdigit()}  # Ensure CustomerID is a digit
         insert_sql = f'INSERT INTO "{table_name}" ("CustomerID") VALUES (?)'
-        db.executemany(insert_sql, [(customer,) for customer in customers])
+        db.executemany(insert_sql, [(int(customer),) for customer in customers])
     print(f"customerdetails table created with {len(customers)} unique CustomerID(s).")
 
 def create_salesdetails_table(filename, db):
@@ -66,7 +66,7 @@ def create_salesdetails_table(filename, db):
         # Insert data
         placeholders = ', '.join('?' for _ in columns)
         insert_sql = f'INSERT INTO "{table_name}" ({", ".join(columns)}) VALUES ({placeholders})'
-        db.executemany(insert_sql, (tuple(row[col] for col in columns) for row in reader))
+        db.executemany(insert_sql, (tuple(int(row[col]) if col == 'CustomerID' and row[col].isdigit() else row[col] for col in columns) for row in reader))
     print(f"salesdetails table created with {len(columns)} columns.")
 
 

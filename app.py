@@ -8,7 +8,7 @@ import dash
 import dash_bootstrap_components as dbc
 from dash import dcc, html
 from dash.dependencies import Input, Output
-from server import app, rio_tinto_colors
+from server import app, server, rio_tinto_colors
 import plotly.express as px
 
 # Import the page layouts

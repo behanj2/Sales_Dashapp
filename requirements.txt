@@ -3,5 +3,4 @@ dash-bootstrap-components
 pandas
 plotly
 numpy
-sqlite3
 gunicorn

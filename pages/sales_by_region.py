@@ -47,7 +47,7 @@ def create_layout():
         color='TotalAmount',
         hover_name='State',
         hover_data={'TotalAmount': True},
-        title='Sales Distribution across Australian States',
+        title='',
         template='plotly_white',
         color_continuous_scale='viridis'
     )
@@ -340,7 +340,7 @@ def update_graphs(start_date, end_date):
     )
 
     fig_diamond.update_layout(
-        title='Temporal Map of Sales by Region',
+        title='',
         showlegend=False,
         xaxis=dict(showgrid=False, zeroline=False, showticklabels=False, range=[-0.1, 1.1]),
         yaxis=dict(showgrid=False, zeroline=False, showticklabels=False, range=[-0.1, 1.1]),

@@ -20,13 +20,13 @@ import os
 
 
 db_name = 'data/sales_transactions.db'
-customer_csv = 'data/customer_details.csv'  # Update 'customer_details.csv' to the actual path
-sales_csv = 'data/sales_transactions.csv'  # Update 'sales_transactions.csv' to the actual path
+customer_csv = 'data/customer_details.csv'
+sales_csv = 'data/sales_transactions.csv'
 
 
 ###############################################################################
 
-# This section is has been placed to allow for downloading directly from Ravi's address.
+# This section is placed to allow for downloading directly from Ravi's address.
 # In the real world, I would do a check of the data, and just download new data.
 
 
@@ -66,16 +66,18 @@ download_file(sales_csv_url, sales_csv)
 
 ###############################################################################
 
+# ETL and Update
 
-if not os.path.exists(customer_csv): 
-    # Download the files
-    download_file(customer_csv_url, customer_csv)
-    download_file(sales_csv_url, sales_csv)
-    
+###############################################################################
 if not os.path.exists(db_name): 
+    # Extract data from csv into sql tables
+
     conn = sqlite3.connect(db_name)
     hrdb.create_customerdetails_table(customer_csv, conn)  # Update 'customer_details.csv' to the actual path
     hrdb.create_salesdetails_table(sales_csv, conn)  # Update 'sales_transactions.csv' to the actual path
+    
+    # Apply Transformation
+    hrdb.transform_data(conn)
 
     # Print table contents
     hrdb.print_table_contents(conn, 'customerdetails')

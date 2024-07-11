@@ -2,7 +2,9 @@
 <br />
 Created by: Joseph Behan<br />
 <br />
-Date: 6/11/2024 - 11/07/2024<br />
+Date Created: 06/07/2024 - 07//07/2024<br />
+Modifications Completed: 10/07/2024 - 11//07/2024<br />
+
 <br />
 This app is built on Python, using Python's built-in sqlite3 for base layer ETL, pandas for second layer manipultation, and Dash+Plotly for data visualisation. Render is as the Webapp Host.<br />
 <br />

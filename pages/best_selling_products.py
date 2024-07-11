@@ -84,7 +84,7 @@ product_layout = create_product_layout()
     [Input('product-slider', 'value')]
 )
 def update_top_products(num_products):
-    sales_df = hrdb.get_data()
+    sales_df, customers_df = hrdb.get_data()
     
     top_products = sales_df.groupby('ProductID').sum(numeric_only=True)['TotalAmount'].reset_index()
     top_products = top_products.nlargest(num_products, 'TotalAmount')

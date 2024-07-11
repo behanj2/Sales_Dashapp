@@ -1,18 +1,19 @@
 # Project Structure
 
-project_root/ <br />
+Sales_Dashapp/ <br />
 │<br />
 ├── app.py: The main entry point for the Dash application.<br />
 ├── server.py: Contains server configuration and settings for the Dash app.<br />
-├── HR_library.py: pySQL Lib, of SQL quries required in the project assessment.<br />
+├── pySQL_library.py: pySQL Lib, of SQL quries required in the project assessment.<br />
 │<br />
 ├── requirements.txt: Lists the Python dependencies required for the project.<br />
 ├── README.md: Provides documentation and instructions for setting up and running the project.<br />
 │<br />
-├── sales_transactions.db: SQLite database containing sales transaction and customer data used by the Dash App. Updatable from csv files.<br />
-├── australia.geojson: GeoJSON file with geographical boundaries of Australian states.<br />
-├── customer_details.csv: CSV file containing customer details.<br />
-├── sales_transactions.csv: CSV file containing sales transaction data.<br />
+├── data/<br />
+│   ├── sales_transactions.db: SQLite database containing sales transaction and customer data used by the Dash App. Updatable from csv files.<br />
+│   ├── australia.geojson: GeoJSON file with geographical boundaries of Australian states.<br />
+│   ├── customer_details.csv: CSV file containing customer details. <br />
+│   └── sales_transactions.csv: CSV file containing sales transaction data.<br />
 │<br />
 ├── assets/<br />
 │   └── RT_Primary_Red_RGB.png: Rio Tinto logo image used in the application.<br />

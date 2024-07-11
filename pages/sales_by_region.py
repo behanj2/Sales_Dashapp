@@ -344,7 +344,7 @@ def update_graphs(start_date, end_date):
     )
 
     # Create the choropleth map figure
-    with open('australia.geojson', 'r') as f:
+    with open('data/australia.geojson', 'r') as f:
         geojson = json.load(f)
 
     fig_map = px.choropleth(

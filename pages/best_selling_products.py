@@ -128,10 +128,9 @@ def update_top_products(num_products):
         size='PLV',
         color='PLV',
         hover_data=['ProductID'],
-        title='Product Lifetime Value (PLV) = (Ave Order Value * Purchase Frequency * Average Lifespan)',
+        title='Product Lifetime Value (PLV)',
         template='plotly_white',
-        color_continuous_scale='Viridis',
-        height=700  # Adjust the height of the plot
+        color_continuous_scale='Viridis'
     )
 
     # Add threshold line

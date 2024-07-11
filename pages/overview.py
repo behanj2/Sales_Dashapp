@@ -132,7 +132,6 @@ def create_layout():
                     ),
                 ],
                 className="mb-4",
-                style={"height": "30vh"}
             ),
             dbc.Row(
                 [
@@ -180,6 +179,7 @@ def update_graphs_and_cards(start_date, end_date, selected_regions):
 
     # Filter by date range
     filtered_df = sales_df[(sales_df['Date'] >= start_date) & (sales_df['Date'] <= end_date)]
+
 
     # Filter by selected regions
     if selected_regions:

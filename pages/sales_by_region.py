@@ -4,28 +4,76 @@ Created on Sat Jul  6 07:40:49 2024
 
 @author: Joseph.Behan
 """
+import dash
 import dash_bootstrap_components as dbc
 from dash import dcc, html
+from dash.dependencies import Input, Output
+import plotly.express as px
 import plotly.graph_objects as go
 import sqlite3
 import pandas as pd
-from dash.dependencies import Input, Output
+import json
 from server import app, rio_tinto_colors
-import plotly.express as px
 
 # Function to get the data
 def get_data():
     # Connect to the SQLite database
     conn = sqlite3.connect('sales_transactions.db')
     sales_df = pd.read_sql_query("SELECT * FROM salesdetails", conn)
+    customers_df = pd.read_sql_query("SELECT * FROM customerdetails", conn)
     conn.close()
     # Convert 'Date' column to datetime
     sales_df['Date'] = pd.to_datetime(sales_df['Date'])
-    return sales_df
+    return sales_df, customers_df
 
 # Function to create the layout
 def create_layout():
-    sales_df = get_data()
+    sales_df, customers_df = get_data()
+    merged_df = pd.merge(sales_df, customers_df, on='CustomerID')
+    
+    # Calculate total sales per state
+    state_sales = merged_df.groupby('State')['TotalAmount'].sum().reset_index()
+
+    # Load Australian states geojson file
+    with open('australia.geojson', 'r') as f:
+        geojson = json.load(f)
+
+    # Create the choropleth map figure
+    fig_map = px.choropleth(
+        state_sales,
+        geojson=geojson,
+        locations='State',
+        featureidkey='properties.STATE_NAME',
+        color='TotalAmount',
+        hover_name='State',
+        hover_data={'TotalAmount': True},
+        title='Sales Distribution across Australian States',
+        template='plotly_white',
+        color_continuous_scale='viridis'
+    )
+
+    # Update the layout for better focus on Australia
+    fig_map.update_geos(
+        projection_type='natural earth',
+        showland=True,
+        landcolor="white",
+        showcountries=True,
+        countrycolor="white",
+        lataxis=dict(range=[-45, -10]),
+        lonaxis=dict(range=[110, 155]),
+        showcoastlines=True,
+        coastlinecolor="black",
+        showocean=True,
+        oceancolor="white"
+    )
+
+    fig_map.update_layout(
+        title_font=dict(size=24, family='Arial, sans-serif', color='black'),
+        geo=dict(
+            bgcolor='rgba(0,0,0,0)'
+        ),
+        margin=dict(l=0, r=0, t=50, b=0)
+    )
 
     # Sales Breakdown by Region
     sales_by_region = sales_df.groupby('Region').sum(numeric_only=True)['TotalAmount'].reset_index()
@@ -133,20 +181,6 @@ def create_layout():
         coloraxis=dict(colorscale='Viridis', colorbar=dict(title='Date', ticks='outside'))
     )
 
-    # Bar plot for sales by region
-    fig_bar = go.Figure(go.Bar(
-        x=sales_by_region['Region'],
-        y=sales_by_region['TotalAmount'],
-        marker=dict(color=sales_by_region['TotalAmount'], colorscale='Blues'),
-    ))
-
-    fig_bar.update_layout(
-        title='Sales Breakdown by Region',
-        xaxis_title='Region',
-        yaxis_title='Total Sales',
-        template='plotly_white'
-    )
-
     layout = dbc.Container(
         [
             dbc.Row(
@@ -175,20 +209,14 @@ def create_layout():
                 [
                     dbc.Col(
                         dcc.Graph(id='diamond-graph', figure=fig_diamond),
-                        width=12
+                        width=6
                     ),
-                ],
-                className="mb-4",
-                style={"height": "40vh"}
-            ),
-            dbc.Row(
-                [
                     dbc.Col(
-                        dcc.Graph(id='bar-graph', figure=fig_bar),
-                        width=12
+                        dcc.Graph(id='sales-map', figure=fig_map),
+                        width=6
                     ),
                 ],
-                style={"height": "40vh"}
+                className="mb-4"
             ),
         ],
         fluid=True,
@@ -201,12 +229,13 @@ layout = create_layout()
 
 @app.callback(
     [Output('diamond-graph', 'figure'),
-     Output('bar-graph', 'figure')],
+     Output('sales-map', 'figure')],
     [Input('date-picker-range', 'start_date'),
      Input('date-picker-range', 'end_date')]
 )
 def update_graphs(start_date, end_date):
-    sales_df = get_data()
+    sales_df, customers_df = get_data()
+    merged_df = pd.merge(sales_df, customers_df, on='CustomerID')
 
     # Define the positions of the corners of the diamond
     corners = {
@@ -223,6 +252,7 @@ def update_graphs(start_date, end_date):
     # Filter the data based on the selected date range
     filtered_df = sales_df[(sales_df['Date'] >= start_date) & (sales_df['Date'] <= end_date)]
     sales_by_region = filtered_df.groupby('Region').sum(numeric_only=True)['TotalAmount'].reset_index()
+    state_sales = merged_df[merged_df['Date'].between(start_date, end_date)].groupby('State')['TotalAmount'].sum().reset_index()
 
     # Calculate the sales sum for normalization
     total_sales = sales_by_region['TotalAmount'].sum()
@@ -319,24 +349,48 @@ def update_graphs(start_date, end_date):
         coloraxis=dict(colorscale='Viridis', colorbar=dict(title='Date', ticks='outside'))
     )
 
-    # Bar plot for sales by region
-    fig_bar = go.Figure(go.Bar(
-        x=sales_by_region['Region'],
-        y=sales_by_region['TotalAmount'],
-        marker=dict(color=sales_by_region['TotalAmount'], colorscale='Blues'),
-    ))
+    # Create the choropleth map figure
+    with open('australia.geojson', 'r') as f:
+        geojson = json.load(f)
 
-    fig_bar.update_layout(
-        title='Sales Breakdown by Region',
-        xaxis_title='Region',
-        yaxis_title='Total Sales',
-        template='plotly_white'
+    fig_map = px.choropleth(
+        state_sales,
+        geojson=geojson,
+        locations='State',
+        featureidkey='properties.STATE_NAME',
+        color='TotalAmount',
+        hover_name='State',
+        hover_data={'TotalAmount': True},
+        title='Sales Distribution across Australian States',
+        template='plotly_white',
+        color_continuous_scale='viridis'
     )
 
-    return fig_diamond, fig_bar
+    fig_map.update_geos(
+        projection_type='natural earth',
+        showland=True,
+        landcolor="white",
+        showcountries=True,
+        countrycolor="white",
+        lataxis=dict(range=[-45, -10]),
+        lonaxis=dict(range=[110, 155]),
+        showcoastlines=True,
+        coastlinecolor="black",
+        showocean=True,
+        oceancolor="white"
+    )
+
+    fig_map.update_layout(
+        title_font=dict(size=24, family='Arial, sans-serif', color='black'),
+        geo=dict(
+            bgcolor='rgba(0,0,0,0)'
+        ),
+        margin=dict(l=0, r=0, t=50, b=0)
+    )
+
+    return fig_diamond, fig_map
 
 layout = create_layout()
-
 
 
 

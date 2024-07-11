@@ -4,7 +4,7 @@ project_root/ <br />
 │<br />
 ├── app.py: The main entry point for the Dash application.<br />
 ├── server.py: Contains server configuration and settings for the Dash app.<br />
-├── HR_library.py: pySQL Lib, of all SQL functionality required for the project.<br />
+├── HR_library.py: pySQL Lib, of SQL quries required in the project assessment.<br />
 │<br />
 ├── requirements.txt: Lists the Python dependencies required for the project.<br />
 ├── README.md: Provides documentation and instructions for setting up and running the project.<br />

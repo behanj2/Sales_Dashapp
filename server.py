@@ -3,6 +3,10 @@
 Created on Sat Jul  6 18:23:15 2024
 
 @author: Joseph.Behan
+
+THis code stores some core server configuarion. Without this server file @calbacks will
+not function in a multipage dash app.
+
 """
 
 import dash

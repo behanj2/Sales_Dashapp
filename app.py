@@ -3,6 +3,9 @@
 Created on Sat Jul  6 07:35:35 2024
 
 @author: Joseph.Behan
+
+This is the main app, details the layout, page names, etc.
+
 """
 import dash
 import dash_bootstrap_components as dbc

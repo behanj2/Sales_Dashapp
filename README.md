@@ -4,7 +4,8 @@ Created by: Joseph Behan<br />
 <br />
 Date: 6/11/2024 - 11/07/2024<br />
 <br />
-This app is built on Python, using Python's built-in sqlite3 for base layer ETL, pandas for second layer manipultation, and Dash+Plotly for data visualisation. Render is as the Webapp Host.
+This app is built on Python, using Python's built-in sqlite3 for base layer ETL, pandas for second layer manipultation, and Dash+Plotly for data visualisation. Render is as the Webapp Host.<br />
+<br />
 Currently hosted on below system specifications: <br />
 <br />
 1 CPU <br />
@@ -15,7 +16,8 @@ See link:
 https://sales-dashapp.onrender.com/overview
 <br />
 <br />
-##  Project Structure
+##  Project Structure <br />
+<br />
 Sales_Dashapp/ <br />
 │<br />
 ├── app.py: The main entry point for the Dash application.<br />

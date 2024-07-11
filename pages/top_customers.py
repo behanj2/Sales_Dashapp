@@ -3,6 +3,9 @@
 Created on Sat Jul  6 07:41:39 2024
 
 @author: Joseph.Behan
+
+Qyuick analysis of the top customers up to 20.
+
 """
 import dash_bootstrap_components as dbc
 from dash import dcc, html
@@ -12,19 +15,11 @@ import sqlite3
 import pandas as pd
 from dash.dependencies import Input, Output
 from server import app, rio_tinto_colors
-
-# Function to get the data
-def get_data():
-    conn = sqlite3.connect('sales_transactions.db')
-    sales_df = pd.read_sql_query("SELECT * FROM salesdetails", conn)
-    customers_df = pd.read_sql_query("SELECT * FROM customerdetails", conn)
-    conn.close()
-    sales_df['Date'] = pd.to_datetime(sales_df['Date'])
-    return sales_df, customers_df
+import pySQL_library as hrdb
 
 # Function to create the layout
 def create_layout():
-    sales_df, customers_df = get_data()
+    sales_df, customers_df = hrdb.get_data()
     top_customers = sales_df.groupby('CustomerID').sum(numeric_only=True)['TotalAmount'].reset_index()
     top_customers = top_customers.nlargest(10, 'TotalAmount').merge(customers_df, on='CustomerID')
 
@@ -83,7 +78,7 @@ layout = create_layout()
     [Input('customer-slider', 'value')]
 )
 def update_top_customers(num_customers):
-    sales_df, customers_df = get_data()
+    sales_df, customers_df = hrdb.get_data()
     
     top_customers = sales_df.groupby('CustomerID').sum(numeric_only=True)['TotalAmount'].reset_index()
     top_customers = top_customers.nlargest(num_customers, 'TotalAmount').merge(customers_df, on='CustomerID')

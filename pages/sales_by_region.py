@@ -3,6 +3,10 @@
 Created on Sat Jul  6 07:40:49 2024
 
 @author: Joseph.Behan
+
+QUick analysis of time changes versus regions. The diamond plot, illustrates the 
+seasonality that is present in the data. 
+
 """
 import dash
 import dash_bootstrap_components as dbc
@@ -14,28 +18,18 @@ import sqlite3
 import pandas as pd
 import json
 from server import app, rio_tinto_colors
-
-# Function to get the data
-def get_data():
-    # Connect to the SQLite database
-    conn = sqlite3.connect('sales_transactions.db')
-    sales_df = pd.read_sql_query("SELECT * FROM salesdetails", conn)
-    customers_df = pd.read_sql_query("SELECT * FROM customerdetails", conn)
-    conn.close()
-    # Convert 'Date' column to datetime
-    sales_df['Date'] = pd.to_datetime(sales_df['Date'])
-    return sales_df, customers_df
+import pySQL_library as hrdb
 
 # Function to create the layout
 def create_layout():
-    sales_df, customers_df = get_data()
+    sales_df, customers_df = hrdb.get_data()
     merged_df = pd.merge(sales_df, customers_df, on='CustomerID')
     
     # Calculate total sales per state
     state_sales = merged_df.groupby('State')['TotalAmount'].sum().reset_index()
 
     # Load Australian states geojson file
-    with open('australia.geojson', 'r') as f:
+    with open('data/australia.geojson', 'r') as f:
         geojson = json.load(f)
 
     # Create the choropleth map figure
@@ -234,7 +228,7 @@ layout = create_layout()
      Input('date-picker-range', 'end_date')]
 )
 def update_graphs(start_date, end_date):
-    sales_df, customers_df = get_data()
+    sales_df, customers_df = hrdb.get_data()
     merged_df = pd.merge(sales_df, customers_df, on='CustomerID')
 
     # Define the positions of the corners of the diamond

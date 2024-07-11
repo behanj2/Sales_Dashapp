@@ -3,6 +3,9 @@
 Created on Sat Jul  6 07:37:44 2024
 
 @author: Joseph.Behan
+
+Landing page designed for a broadbrush overview of the data in its entirety.
+
 """
 import dash_bootstrap_components as dbc
 from dash import dcc, html
@@ -11,21 +14,12 @@ import sqlite3
 import pandas as pd
 from dash.dependencies import Input, Output
 from server import app, rio_tinto_colors
+import pySQL_library as hrdb
 
-# Function to get the data
-def get_data():
-    # Connect to the SQLite database
-    conn = sqlite3.connect('sales_transactions.db')
-    sales_df = pd.read_sql_query("SELECT * FROM salesdetails", conn)
-    customers_df = pd.read_sql_query("SELECT * FROM customerdetails", conn)
-    conn.close()
-    # Convert 'Date' column to datetime
-    sales_df['Date'] = pd.to_datetime(sales_df['Date'])
-    return sales_df, customers_df
 
 # Function to create the layout
 def create_layout():
-    sales_df, customers_df = get_data()
+    sales_df, customers_df = hrdb.get_data()
 
     total_sales = sales_df['TotalAmount'].sum()
     total_customers = sales_df['CustomerID'].nunique()
@@ -167,7 +161,7 @@ layout = create_layout()
      Input('region-filter', 'value')]
 )
 def update_graphs_and_cards(start_date, end_date, selected_regions):
-    sales_df, _ = get_data()
+    sales_df, _ = hrdb.get_data()
 
     # Check if the dates are properly parsed
     if not start_date or not end_date:

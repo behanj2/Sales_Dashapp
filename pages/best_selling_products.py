@@ -3,6 +3,10 @@
 Created on Sat Jul  6 07:41:39 2024
 
 @author: Joseph.Behan
+
+
+Qyuick analysis of the top products up to 20.
+
 """
 
 import dash_bootstrap_components as dbc
@@ -13,18 +17,11 @@ import sqlite3
 import pandas as pd
 from dash.dependencies import Input, Output
 from server import app, rio_tinto_colors
+import pySQL_library as hrdb
 
-# Function to get the data
-def get_product_data():
-    conn = sqlite3.connect('sales_transactions.db')
-    sales_df = pd.read_sql_query("SELECT * FROM salesdetails", conn)
-    conn.close()
-    sales_df['Date'] = pd.to_datetime(sales_df['Date'])
-    return sales_df
-
-# Function to create the layout
+# Function to create the page layout layout
 def create_product_layout():
-    sales_df = get_product_data()
+    sales_df, customers_df = hrdb.get_data()
     top_products = sales_df.groupby('ProductID').sum(numeric_only=True)['TotalAmount'].reset_index()
     top_products = top_products.nlargest(10, 'TotalAmount')
 
@@ -87,7 +84,7 @@ product_layout = create_product_layout()
     [Input('product-slider', 'value')]
 )
 def update_top_products(num_products):
-    sales_df = get_product_data()
+    sales_df = hrdb.get_data()
     
     top_products = sales_df.groupby('ProductID').sum(numeric_only=True)['TotalAmount'].reset_index()
     top_products = top_products.nlargest(num_products, 'TotalAmount')

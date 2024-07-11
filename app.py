@@ -7,7 +7,7 @@ Created on Sat Jul  6 07:35:35 2024
 import dash
 import dash_bootstrap_components as dbc
 from dash import dcc, html
-from dash.dependencies import Input, Output
+from dash.dependencies import Input, Output, State
 from server import app, server, rio_tinto_colors
 import plotly.express as px
 import subprocess
@@ -90,6 +90,7 @@ def refresh_data(n_clicks):
         except Exception as e:
             return f"Error: {e}"
     return "Refresh Data"
+
 
 if __name__ == '__main__':
     app.run_server(debug=True, host='127.0.0.1', port=8050)

@@ -12,7 +12,6 @@ import os
 import pandas as pd
 from datetime import datetime, timedelta
 
-
 def create_customerdetails_table(filename, db):
     """Create the customerdetails table in the database from a CSV file."""
     print(f"Creating customerdetails table from {filename}...")
@@ -23,14 +22,27 @@ def create_customerdetails_table(filename, db):
         # Drop table if it exists
         db.execute(f'DROP TABLE IF EXISTS "{table_name}"')
         
-        # Create table
-        db.execute(f'CREATE TABLE "{table_name}" ("CustomerID" INTEGER PRIMARY KEY)')
+        # Create table with all required columns
+        db.execute(f'''
+            CREATE TABLE "{table_name}" (
+                "CustomerID" INTEGER PRIMARY KEY,
+                "CustomerName" TEXT,
+                "City" TEXT,
+                "State" TEXT,
+                "Postcode" TEXT
+            )
+        ''')
         
         # Insert data
-        customers = {row['CustomerID'] for row in reader if row['CustomerID'].isdigit()}  # Ensure CustomerID is a digit
-        insert_sql = f'INSERT INTO "{table_name}" ("CustomerID") VALUES (?)'
-        db.executemany(insert_sql, [(int(customer),) for customer in customers])
-    print(f"customerdetails table created with {len(customers)} unique CustomerID(s).")
+        insert_sql = f'''
+            INSERT INTO "{table_name}" 
+            ("CustomerID", "CustomerName", "City", "State", "Postcode") 
+            VALUES (?, ?, ?, ?, ?)
+        '''
+        data = [(int(row['CustomerID']), row['CustomerName'], row['City'], row['State'], row['Postcode']) 
+                for row in reader if row['CustomerID'].isdigit()]
+        db.executemany(insert_sql, data)
+    print(f"customerdetails table created with {len(data)} records.")
 
 def create_salesdetails_table(filename, db):
     """Create the salesdetails table in the database from a CSV file."""
@@ -69,13 +81,13 @@ def create_salesdetails_table(filename, db):
         db.executemany(insert_sql, (tuple(int(row[col]) if col == 'CustomerID' and row[col].isdigit() else row[col] for col in columns) for row in reader))
     print(f"salesdetails table created with {len(columns)} columns.")
 
-
 # Step 2: Data Transformation
 def transform_data(db):
-    """Transform data by calculating TotalAmount as Quantity * Price - Discount."""
+    """Transform data by calculating TotalAmount as Quantity * Price - Discount, but only for new records."""
     update_total_amount = '''
         UPDATE salesdetails
         SET TotalAmount = (Quantity * Price) - Discount
+        WHERE TotalAmount IS NULL OR TotalAmount = 0 OR TotalAmount = (Quantity * Price)
     '''
     db.execute(update_total_amount)
 
@@ -92,6 +104,11 @@ def query_database(query):
 
 
 ###############################################################################
+
+#################### Illustrate the required queries below ####################
+
+###############################################################################
+
 
 def extract_sales_last_quarter():
     start_of_last_quarter = '2023-10-01'

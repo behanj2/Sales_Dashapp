@@ -1,22 +1,21 @@
-#Dash App Dashboard of Anonymous Sales Transaction Data<br />
+# Dash App Dashboard of Anonymous Sales Transaction Data
 <br />
-Created by: Joseph Behan
-Date: 6/11/2024 - 11/07/2024
+Created by: Joseph Behan<br />
 <br />
-This app is built on Python, using Python's built-- in sqlite3 for base layer ETL, pandas for second layer manipultation, and Dash+Plotly for data visualisation. Render used as the Webapp Host.
-
-Currently hosted on below system specifications:
-1 CPU
-512 MB
-
+Date: 6/11/2024 - 11/07/2024<br />
 <br />
+This app is built on Python, using Python's built-in sqlite3 for base layer ETL, pandas for second layer manipultation, and Dash+Plotly for data visualisation. Render is as the Webapp Host.
+Currently hosted on below system specifications: <br />
 <br />
-See below link:
-https://sales-dashapp.onrender.com/overview<br />
+1 CPU <br />
+512 MB <br />
 <br />
 <br />
-## Project Structure<br />
+See link:
+https://sales-dashapp.onrender.com/overview
 <br />
+<br />
+##  Project Structure
 Sales_Dashapp/ <br />
 │<br />
 ├── app.py: The main entry point for the Dash application.<br />
